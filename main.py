@@ -12,9 +12,6 @@ clock = pygame.time.Clock()
 
 player = Rocket(SCREEN)
 
-for i in range(5):
-    Asteroid.add_asteroid(Asteroid(SCREEN))
-
 def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
@@ -25,16 +22,27 @@ def check_quit_conditions() -> None:
         pygame.quit()
         sys.exit()
 
+def spawn_asteroids(cooldown) -> None:
+    cooldown -= 1
+    if cooldown <= 0:
+        Asteroid.add_asteroid(Asteroid(SCREEN))
+        # print("E")
+        cooldown = 10
+    return cooldown
+
+
 def mainloop() -> None:
+    asteroid_cooldown = 10
     while True:
         clock.tick(FPSCAP)
 
         check_quit_conditions()
 
+        asteroid_cooldown = spawn_asteroids(asteroid_cooldown)
+
         SCREEN.fill((0,0,0))
 
-        for i in Asteroid.asteroids:
-            i.update()
+        [asteroid.update() for asteroid in Asteroid.asteroids]
 
         player.update()
 
