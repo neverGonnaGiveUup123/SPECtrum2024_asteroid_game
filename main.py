@@ -1,39 +1,44 @@
 import sys
 import pygame
-from src.buttons import Button
+from settings import *
+from rocket import Rocket
+from asteroid import Asteroid
 
 pygame.init()
 
-SCREEN = pygame.display.set_mode((0,0))
-WINDOWSIZE = pygame.display.get_window_size()
-
-main_menu_button = Button([WINDOWSIZE[0] // 2, 100], "Press spacebar to start", font_size=36)
-main_menu_button.set_colour((255,10,10), 255)
-main_menu_button.set_pos([WINDOWSIZE[0] // 2, WINDOWSIZE[1] // 2])
+SCREEN = pygame.display.set_mode(WINDOWSIZE)
 
 clock = pygame.time.Clock()
 
-started = False
-while True:
-    clock.tick(60)
-    keys = pygame.key.get_pressed()
+player = Rocket(SCREEN)
 
+for i in range(5):
+    Asteroid.add_asteroid(Asteroid(SCREEN))
+
+def check_quit_conditions() -> None:
+    keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    
     if keys[pygame.K_q]:
         pygame.quit()
         sys.exit()
 
-    SCREEN.fill((0,0,0))
+def mainloop() -> None:
+    while True:
+        clock.tick(FPSCAP)
 
-    if started == False:
-        main_menu_button.display(SCREEN)
+        check_quit_conditions()
+
+        SCREEN.fill((0,0,0))
+
+        for i in Asteroid.asteroids:
+            i.update()
+
+        player.update()
+
         pygame.display.flip()
-        if keys[pygame.K_SPACE]:
-            started = True
-        continue
 
-    pygame.display.flip()
+if __name__ == "__main__":
+    mainloop()
