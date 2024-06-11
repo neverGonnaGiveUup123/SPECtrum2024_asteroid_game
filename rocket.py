@@ -1,6 +1,5 @@
 import pygame
 from settings import *
-from asteroid import Asteroid
 
 class Rocket:
     def __init__(self, screen: pygame.Surface) -> None:
@@ -28,8 +27,8 @@ class Rocket:
         
         self.rect = self.skin.get_rect(center=self.pos)
     
-    def check_collision(self, sprite_group) -> False:
-        if pygame.sprite.spritecollide(self, sprite_group, False, pygame.sprite.collide_mask):
+    def check_collision(self, sprite_group, kill: bool) -> False:
+        if pygame.sprite.spritecollide(self, sprite_group, kill, pygame.sprite.collide_mask):
             return True
         else:
             return False

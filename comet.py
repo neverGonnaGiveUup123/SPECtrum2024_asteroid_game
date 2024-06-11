@@ -15,12 +15,14 @@ class Comet(pygame.sprite.Sprite):
         self.velocity = 800 // FPSCAP
         self.pos[1] = self.y_intercept
         self.screen = screen
+        self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
         super().__init__()
     
     def update(self):
         self.pos[0] += self.velocity
         self.pos[1] = self.gradient * self.pos[0] + self.y_intercept
-        self.screen.blit(self.skin, self.pos)
+        self.rect = self.skin.get_rect(center=self.pos)
+        self.screen.blit(self.skin, self.rect)
     
     @classmethod
     def create_comet(cls, screen):

@@ -13,6 +13,8 @@ clock = pygame.time.Clock()
 
 player = Rocket(SCREEN)
 
+points = 0
+
 def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
@@ -24,12 +26,19 @@ def check_quit_conditions() -> None:
         sys.exit()
 
 def check_lose_conditions() -> None:
-    if player.check_collision(Asteroid.get_asteroids()):
+    if player.check_collision(Asteroid.get_asteroids(), False):
+        print(f"You lose! Points gained: {pygame.time.get_ticks() + points}")
         pygame.quit()
-        print("You lose!")
         sys.exit()
 
+def track_points() -> int:
+    if player.check_collision(Comet.comet, True):
+        return 10000
+    else:
+        return 0
+
 def mainloop() -> None:
+    global points
     cooldown = ASTEROIDSPAWNRATE
     Comet.create_comet(SCREEN)
     while True:
@@ -48,6 +57,7 @@ def mainloop() -> None:
         Asteroid.update_all()
         Comet.update_comet()
         player.update()
+        points += track_points()
 
         check_lose_conditions()
 
