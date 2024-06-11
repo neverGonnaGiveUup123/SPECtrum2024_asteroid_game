@@ -22,29 +22,31 @@ def check_quit_conditions() -> None:
         pygame.quit()
         sys.exit()
 
-def spawn_asteroids(cooldown) -> None:
-    cooldown -= 1
-    if cooldown <= 0:
-        Asteroid.add_asteroid(Asteroid(SCREEN))
-        # print("E")
-        cooldown = 10
-    return cooldown
-
+def check_lose_conditions() -> None:
+    if player.check_collision(Asteroid.get_asteroids()):
+        pygame.quit()
+        print("You lose!")
+        sys.exit()
 
 def mainloop() -> None:
-    asteroid_cooldown = 10
+    cooldown = ASTEROIDSPAWNRATE
     while True:
         clock.tick(FPSCAP)
 
         check_quit_conditions()
 
-        asteroid_cooldown = spawn_asteroids(asteroid_cooldown)
-
         SCREEN.fill((0,0,0))
+        cooldown -= 1
+        # print(cooldown)
+        if cooldown <= 0:
+            Asteroid.add_asteroid(Asteroid(SCREEN))
+            cooldown = ASTEROIDSPAWNRATE
+            cooldown -= pygame.time.get_ticks() // 1000
 
-        [asteroid.update() for asteroid in Asteroid.asteroids]
-
+        Asteroid.update_all()
         player.update()
+
+        check_lose_conditions()
 
         pygame.display.flip()
 
