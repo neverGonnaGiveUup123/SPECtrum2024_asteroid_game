@@ -3,6 +3,7 @@ import pygame
 from settings import *
 from rocket import Rocket
 from asteroid import Asteroid
+from comet import Comet
 
 pygame.init()
 
@@ -30,6 +31,7 @@ def check_lose_conditions() -> None:
 
 def mainloop() -> None:
     cooldown = ASTEROIDSPAWNRATE
+    Comet.create_comet(SCREEN)
     while True:
         clock.tick(FPSCAP)
 
@@ -44,6 +46,7 @@ def mainloop() -> None:
             cooldown -= pygame.time.get_ticks() // 1000
 
         Asteroid.update_all()
+        Comet.update_comet()
         player.update()
 
         check_lose_conditions()
