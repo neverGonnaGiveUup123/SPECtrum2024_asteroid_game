@@ -93,7 +93,7 @@ def main_menu_loop() -> None:
 
     button_selected = 2
     while True:
-        clock.tick(6)
+        clock.tick(8)
         check_quit_conditions()
         SCREEN.fill((0,0,0))
         keys = pygame.key.get_pressed()
