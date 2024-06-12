@@ -50,7 +50,7 @@ class Comet(pygame.sprite.Sprite):
             tmp_rect = i.get_rect(center=tmp_pos)
             # print(tmp_pos)
             self.screen.blit(i, tmp_rect)
-            tmp_interval -= self.velocity*2
+            tmp_interval -= self.velocity * 4
     
     @classmethod
     def create_comet(cls, screen):
