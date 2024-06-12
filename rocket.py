@@ -4,17 +4,17 @@ from settings import *
 class Rocket:
     def __init__(self, screen: pygame.Surface) -> None:
         self.window_size = pygame.display.get_window_size()
-        self.size = (self.window_size[0] // 10, self.window_size[1] // 10)
+        self.size = (self.window_size[0] // 10, self.window_size[0] // 10)
         self.skin = pygame.Surface(self.size)
         self.skin.fill((255,0,0))
-        self.velocity = 420 // FPSCAP
+        self.velocity = 512 // FPSCAP
         self.pos = [self.window_size[0] // 2, self.window_size[1] // 5 * 4]
         self.screen = screen
         self.mask =  pygame.mask.from_surface(self.skin.convert_alpha())
 
     def handle_movement(self) -> None:
         keys = pygame.key.get_pressed()
-        print(self.pos)
+        # print(self.pos)
         if keys[pygame.K_w] and self.pos[1] - self.size[1] // 2 > 0:
             self.pos[1] -= self.velocity
         if keys[pygame.K_d] and self.pos[0] + self.size[0] // 2 < self.window_size[0]:

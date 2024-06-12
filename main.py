@@ -55,7 +55,11 @@ def mainloop() -> None:
             cooldown -= pygame.time.get_ticks() // 1000
 
         Asteroid.update_all()
-        Comet.update_comet()
+        if Comet.comet_exists():
+            Comet.update_comet()
+        else:
+            Comet.create_comet(SCREEN)
+            
         player.update()
         points += track_points()
 
