@@ -1,10 +1,12 @@
 import sys
+import os
 import pygame
+import json
 from settings import *
 from rocket import Rocket
 from asteroid import Asteroid
 from comet import Comet
-from widgets import Button
+from widgets import Button, Text
 
 pygame.init()
 
@@ -26,15 +28,18 @@ def check_quit_conditions() -> None:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    if keys[pygame.K_q]:
+    if keys[pygame.K_ESCAPE]:
         pygame.quit()
         sys.exit()
 
 def check_lose_conditions() -> None:
+    global selected_loop
     if player.check_collision(Asteroid.get_asteroids(), False):
         print(f"You lose! Points gained: {pygame.time.get_ticks() + points}")
-        pygame.quit()
-        sys.exit()
+        selected_loop = 2
+        return True
+    else:
+        return False
 
 def track_points() -> int:
     if player.check_collision(Comet.comet, True):
@@ -68,7 +73,8 @@ def game_loop() -> None:
         player.update()
         points += track_points()
 
-        check_lose_conditions()
+        if check_lose_conditions():
+            break
 
         pygame.display.flip()
 
@@ -111,7 +117,36 @@ def main_menu_loop() -> None:
         else:
             play_button_passive.display(SCREEN)
             designer_button_active.display(SCREEN)
+            if keys[pygame.K_RETURN]:
+                selected_loop = 2
+                break
         
+        pygame.display.flip()
+
+def get_high_scores():
+    with open("highScores.json", 'r') as file:
+        data = json.load(file)
+        print(data)
+
+def scoreboard_loop() -> None:
+    global selected_loop
+    leaderboard_text = Text(window_size[0] // 56, FONT)
+    text_colour = pygame.Color(255,255,255)
+    get_high_scores()
+    while True:
+        check_quit_conditions()
+
+        SCREEN.fill((0,0,0))
+
+        keys = pygame.key.get_pressed()
+
+        leaderboard_text.display("Game over!", [window_size[0] // 2, window_size[1] // 12], text_colour, SCREEN)
+        leaderboard_text.display("Press backspace to return", [window_size[0] // 2, window_size[1] // 12 * 11], text_colour, SCREEN)
+
+        if keys[pygame.K_BACKSPACE]:
+            selected_loop = 0
+            break
+
         pygame.display.flip()
 
 if __name__ == "__main__":
@@ -121,3 +156,5 @@ if __name__ == "__main__":
                 main_menu_loop()
             case 1:
                 game_loop()
+            case 2:
+                scoreboard_loop()

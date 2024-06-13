@@ -19,8 +19,10 @@ class Button:
         screen.blit(text, text_rect)
 
 class Text:
-    def __init__(self, text : str, font_size: int, font) -> None:
+    def __init__(self, font_size: int, font) -> None:
         self.font = pygame.font.Font(font, font_size)
 
-    def display(self, text, pos):
-        self.font.render()
+    def display(self, text: str, pos: list[int, int], colour: pygame.Color, screen: pygame.Surface):
+        rendered_text = self.font.render(text, True, colour)
+        positioned_text = rendered_text.get_rect(center = pos)
+        screen.blit(rendered_text, positioned_text)
