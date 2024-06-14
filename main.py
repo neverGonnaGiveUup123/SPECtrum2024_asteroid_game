@@ -62,7 +62,7 @@ def game_loop() -> None:
         if cooldown <= 0:
             Asteroid.add_asteroid(Asteroid(SCREEN))
             cooldown = ASTEROIDSPAWNRATE
-            if clock.tick() < 100:
+            if clock.tick() > 20:
                 cooldown -= pygame.time.get_ticks() // 1000
 
         Asteroid.update_all()
@@ -146,18 +146,20 @@ def scoreboard_loop() -> None:
         keys = pygame.key.get_pressed()
 
         leaderboard_text.display("Game over!", [window_size[0] // 2, window_size[1] // 12], text_colour, SCREEN)
+        leaderboard_text.display("High scores:", [window_size[0] // 2, window_size[1] // 12 * 2], text_colour, SCREEN) 
         leaderboard_text.display("Press backspace to return", [window_size[0] // 2, window_size[1] // 12 * 11], text_colour, SCREEN)
         leaderboard_text.display(f"Your score: {points}", [window_size[0] // 2, window_size[1] // 12 * 10], text_colour, SCREEN)
 
-        tmp = 1
+        tmp = 3
         for i in scores.items():
-            if tmp >= 10:
+            if tmp >= 8:
                 break
             tmp += 1
             leaderboard_text.display(f"{i[0]} : {i[1]}", [window_size[0] // 2, window_size[1] // 12 * tmp], text_colour, SCREEN)
 
         if keys[pygame.K_BACKSPACE]:
-            scores[os.getlogin()] = points
+            if scores[os.getlogin()] < points:
+                scores.update({f"{os.getlogin()}" : points})
             set_high_scores(scores)
             selected_loop = 0
             break
