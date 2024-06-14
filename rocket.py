@@ -36,3 +36,6 @@ class Rocket:
         self.handle_movement()
         # print(self.pos)
         self.screen.blit(self.skin, self.rect)
+    
+    def set_pos(self, pos: list[int, int]):
+        self.pos = pos

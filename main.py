@@ -35,7 +35,6 @@ def check_quit_conditions() -> None:
 def check_lose_conditions() -> None:
     global selected_loop
     if player.check_collision(Asteroid.get_asteroids(), False):
-        print(f"You lose! Points gained: {pygame.time.get_ticks() + points}")
         selected_loop = 2
         return True
     else:
@@ -43,17 +42,18 @@ def check_lose_conditions() -> None:
 
 def track_points() -> int:
     if player.check_collision(Comet.comet, True):
-        return 10000
+        return 100 + clock.tick()
     else:
-        return 0
+        return clock.tick()
 
 def game_loop() -> None:
     global points
     cooldown = ASTEROIDSPAWNRATE
     Comet.create_comet(SCREEN)
+    player.set_pos([window_size[0] // 2, window_size[1] // 5 * 4])
+    Asteroid.asteroids.empty()
     while True:
         clock.tick(FPSCAP)
-
         check_quit_conditions()
 
         SCREEN.fill((0,0,0))
@@ -62,7 +62,8 @@ def game_loop() -> None:
         if cooldown <= 0:
             Asteroid.add_asteroid(Asteroid(SCREEN))
             cooldown = ASTEROIDSPAWNRATE
-            cooldown -= pygame.time.get_ticks() // 1000
+            if clock.tick() < 100:
+                cooldown -= pygame.time.get_ticks() // 1000
 
         Asteroid.update_all()
         if Comet.comet_exists():
@@ -123,16 +124,20 @@ def main_menu_loop() -> None:
         
         pygame.display.flip()
 
-def get_high_scores():
+def get_high_scores() -> dict:
     with open("highScores.json", 'r') as file:
         data = json.load(file)
-        print(data)
+        return data
 
+def set_high_scores(obj):
+    with open("highScores.json", "w") as file:
+        json.dump(obj, file)
+        
 def scoreboard_loop() -> None:
     global selected_loop
     leaderboard_text = Text(window_size[0] // 56, FONT)
     text_colour = pygame.Color(255,255,255)
-    get_high_scores()
+    scores = get_high_scores()
     while True:
         check_quit_conditions()
 
@@ -142,8 +147,18 @@ def scoreboard_loop() -> None:
 
         leaderboard_text.display("Game over!", [window_size[0] // 2, window_size[1] // 12], text_colour, SCREEN)
         leaderboard_text.display("Press backspace to return", [window_size[0] // 2, window_size[1] // 12 * 11], text_colour, SCREEN)
+        leaderboard_text.display(f"Your score: {points}", [window_size[0] // 2, window_size[1] // 12 * 10], text_colour, SCREEN)
+
+        tmp = 1
+        for i in scores.items():
+            if tmp >= 10:
+                break
+            tmp += 1
+            leaderboard_text.display(f"{i[0]} : {i[1]}", [window_size[0] // 2, window_size[1] // 12 * tmp], text_colour, SCREEN)
 
         if keys[pygame.K_BACKSPACE]:
+            scores[os.getlogin()] = points
+            set_high_scores(scores)
             selected_loop = 0
             break
 
