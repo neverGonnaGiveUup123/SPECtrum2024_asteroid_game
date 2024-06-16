@@ -3,8 +3,10 @@ import math
 from random import randint
 from settings import *
 
+
 class Comet(pygame.sprite.Sprite):
     comet = pygame.sprite.GroupSingle()
+
     def __init__(self, screen: pygame.Surface) -> None:
         self.window_size = pygame.display.get_window_size()
         self.y_intercept = randint(0, self.window_size[1])
@@ -19,18 +21,18 @@ class Comet(pygame.sprite.Sprite):
         ]
         alpha = 220
         for i in self.trail:
-            i.fill((0,0,255,alpha))
+            i.fill((0, 0, 255, alpha))
             alpha -= 50
 
-        self.skin.fill((0,0,255))
-        self.pos = [0,0]
+        self.skin.fill((0, 0, 255))
+        self.pos = [0, 0]
         self.velocity = 1200 // FPSCAP
         self.pos[1] = self.y_intercept
         self.screen = screen
         self.rect = self.skin.get_rect()
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
         super().__init__()
-    
+
     def update(self):
         self.pos[0] += self.velocity
         self.pos[1] = self.gradient * self.pos[0] + self.y_intercept
@@ -39,7 +41,7 @@ class Comet(pygame.sprite.Sprite):
         self.make_trail()
         if self.pos[0] > self.window_size[0] + 100:
             Comet.comet.empty()
-    
+
     def make_trail(self):
         tmp_interval = self.velocity
         for i in self.trail:
@@ -51,17 +53,17 @@ class Comet(pygame.sprite.Sprite):
             # print(tmp_pos)
             self.screen.blit(i, tmp_rect)
             tmp_interval -= self.velocity * 4
-    
+
     @classmethod
     def create_comet(cls, screen):
         if pygame.time.get_ticks() % 100 == 0:
             cls.comet.add(Comet(screen))
-    
+
     @classmethod
     def update_comet(cls):
         if cls.comet.sprite:
             cls.comet.sprite.update()
-    
+
     @classmethod
     def comet_exists(cls) -> bool:
         if cls.comet.sprite:
