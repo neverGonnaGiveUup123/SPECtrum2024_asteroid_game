@@ -63,12 +63,13 @@ def game_loop() -> None:
 
         SCREEN.fill((0, 0, 0))
         cooldown -= 1
-        # print(cooldown)
+        print(variable_rate)
         if cooldown <= 0:
             Asteroid.add_asteroid(Asteroid(SCREEN))
             cooldown = variable_rate
-            if clock.tick() < 20:
-                variable_rate -= clock.get_rawtime() * 2
+
+            if variable_rate > ASTEROIDSPAWNCAP:
+                variable_rate -= clock.get_rawtime()
 
         Asteroid.update_all()
         if Comet.comet_exists():
@@ -159,7 +160,7 @@ def set_high_scores(obj):
 
 
 def scoreboard_loop() -> None:
-    global selected_loop
+    global selected_loop, points
     leaderboard_text = Text(window_size[0] // 56, FONT)
     text_colour = pygame.Color(255, 255, 255)
     scores = get_high_scores()
@@ -214,6 +215,7 @@ def scoreboard_loop() -> None:
                 scores[os.getlogin()] = points
             set_high_scores(scores)
             selected_loop = 0
+            points = 0
             break
 
         pygame.display.flip()
