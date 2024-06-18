@@ -37,7 +37,7 @@ def check_quit_conditions() -> None:
 def check_lose_conditions() -> None:
     global selected_loop
     if player.check_collision(Asteroid.get_asteroids(), False):
-        selected_loop = 2
+        selected_loop = 3
         return True
     else:
         return False
@@ -224,8 +224,93 @@ def scoreboard_loop() -> None:
 def rocket_designer_loop():
     global selected_loop
 
+    top_selected = 0
+    middle_selected = 0
+    engine_selected = 0
+    level_selected = 0
+
+    component_size = (window_size[0] // COMPONENTRESIZEVAL, window_size[0] // COMPONENTRESIZEVAL)
+
     while True:
         check_quit_conditions()
+
+        SCREEN.fill((0,0,0))
+
+        # select level
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            pygame.time.delay(200)
+            if level_selected < 2:
+                level_selected += 1
+            else:
+                level_selected = 0
+        if keys[pygame.K_s]:
+            pygame.time.delay(200)
+            if level_selected > 0:
+                level_selected -= 1
+            else:
+                level_selected = 2
+
+        # select component
+        match level_selected:
+            case 0:
+                if keys[pygame.K_d]:
+                    pygame.time.delay(200)
+                    if top_selected < 2:
+                        top_selected += 1
+                    else:
+                        top_selected = 0
+                if keys[pygame.K_a]:
+                    pygame.time.delay(200)
+                    if top_selected < 0:
+                        top_selected -= 1
+                    else:
+                        top_selected = 2
+            case 1:
+                if keys[pygame.K_d]:
+                    pygame.time.delay(200)
+                    if middle_selected < 2:
+                        middle_selected += 1
+                    else:
+                        middle_selected = 0
+                if keys[pygame.K_a]:
+                    pygame.time.delay(200)
+                    if middle_selected < 0:
+                        middle_selected -= 1
+                    else:
+                        middle_selected = 2
+            case 2:
+                if keys[pygame.K_d]:
+                    pygame.time.delay(200)
+                    if engine_selected < 2:
+                        engine_selected += 1
+                    else:
+                        engine_selected = 0
+                if keys[pygame.K_a]:
+                    pygame.time.delay(200)
+                    if engine_selected < 0:
+                        engine_selected -= 1
+                    else:
+                        engine_selected = 2
+        
+        print(level_selected, top_selected, middle_selected, engine_selected)
+
+        # get the selected component
+        top_component = COMPONENTS["top level"][top_selected]
+        middle_component = COMPONENTS["middle level"][middle_selected]
+        engine_component = COMPONENTS["engine"][engine_selected]
+
+        # Get the necessary information for displaying
+        top_component_skin = pygame.image.load(top_component.skin)
+        top_component_skin = pygame.transform.scale(top_component_skin, component_size)
+        middle_component_skin = pygame.image.load(middle_component.skin)
+        middle_component_skin = pygame.transform.scale(middle_component_skin, component_size)
+        engine_component_skin = pygame.image.load(engine_component.skin)
+        engine_component_skin = pygame.transform.scale(engine_component_skin, component_size)
+
+        SCREEN.blit(top_component_skin, top_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 + 128)))
+        SCREEN.blit(middle_component_skin, middle_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 2 + 128)))
+        SCREEN.blit(engine_component_skin, engine_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 3 + 128)))
 
         pygame.display.flip()
 
@@ -238,4 +323,6 @@ if __name__ == "__main__":
             case 1:
                 game_loop()
             case 2:
+                rocket_designer_loop()
+            case 3:
                 scoreboard_loop()
