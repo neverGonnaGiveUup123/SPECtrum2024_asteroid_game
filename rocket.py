@@ -13,6 +13,7 @@ class Rocket:
         self.screen = screen
         self.points_multiplier = 1
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
+        self.selected_weapon = 0
 
     def handle_movement(self) -> None:
         keys = pygame.key.get_pressed()

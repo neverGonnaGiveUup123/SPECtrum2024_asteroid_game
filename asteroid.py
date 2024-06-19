@@ -30,7 +30,10 @@ class Asteroid(pygame.sprite.Sprite):
     @classmethod
     def update_all(cls):
         for i in cls.asteroids:
-            i.update()
+            if i.pos[1] > i.window_size[1] + 100:
+                del i
+            else:
+                i.update()
 
     @classmethod
     def add_asteroid(cls, obj):

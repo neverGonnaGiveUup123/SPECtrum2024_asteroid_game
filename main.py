@@ -120,6 +120,9 @@ def main_menu_loop() -> None:
         designer_button_text,
     )
 
+    heading = Text(36, "PressStart2P-vaV7.ttf")
+    sub_text = Text(12, "PressStart2P-vaV7.ttf")
+
     button_selected = 2
     while True:
         clock.tick()
@@ -145,6 +148,27 @@ def main_menu_loop() -> None:
             if keys[pygame.K_RETURN]:
                 selected_loop = 2
                 break
+        
+        heading.display("Asteroid Anarchy!", 
+                        [window_size[0] // 2, window_size[1] // 5],
+                        (0,0,255),
+                        SCREEN
+                        )
+        sub_text.display("A SPECtrum Club game",
+                        [window_size[0] // 2, window_size[1] // 8 * 3],
+                        (255,255,255),
+                        SCREEN
+                        )
+        sub_text.display("Developed by Siddharth S",
+                        [window_size[0] // 2, window_size[1] // 20 * 17],
+                        (255,255,255),
+                        SCREEN
+                        )
+        sub_text.display("Press Esc to quit. Controls are WASD",
+                        [window_size[0] // 2, window_size[1] // 20 * 18],
+                        (255,255,255),
+                        SCREEN
+                        )
 
         pygame.display.flip()
 
@@ -164,6 +188,8 @@ def scoreboard_loop() -> None:
     global selected_loop, points
     leaderboard_text = Text(window_size[0] // 56, FONT)
     text_colour = pygame.Color(255, 255, 255)
+    points *= player.points_multiplier
+    points = round(points)
     scores = get_high_scores()
     while True:
         check_quit_conditions()
