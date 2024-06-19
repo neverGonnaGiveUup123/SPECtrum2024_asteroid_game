@@ -336,6 +336,13 @@ def rocket_designer_loop():
         component_text.display(engine_component.description, [256, window_size[1] // 5 * 3 + 64], (255,255,255), SCREEN)
         component_text.display(weapon_component.description, [256, window_size[1] // 5 * 4 + 64], (255,255,255), SCREEN)
 
+        component_text.display("ROCKET DESIGNER", [window_size[0] // 4 * 3, 64], (255,255,255), SCREEN)
+        component_text.display("Backspace to exit", [window_size[0] // 4 * 3, 128], (255,255,255), SCREEN)
+
+        if keys[pygame.K_BACKSPACE]:
+            selected_loop = 0
+            break
+
         pygame.display.flip()
 
 
