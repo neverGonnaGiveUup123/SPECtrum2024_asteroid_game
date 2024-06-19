@@ -28,9 +28,17 @@ def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            os.remove("top_component_skin.png")
+            os.remove("middle_component_skin.png")
+            os.remove("engine_component_skin.png")
+            os.remove("combined_components.png")
             pygame.quit()
             sys.exit()
     if keys[pygame.K_ESCAPE]:
+        os.remove("top_component_skin.png")
+        os.remove("middle_component_skin.png")
+        os.remove("engine_component_skin.png")
+        os.remove("combined_components.png")
         pygame.quit()
         sys.exit()
 
@@ -124,6 +132,7 @@ def main_menu_loop() -> None:
     sub_text = Text(12, "PressStart2P-vaV7.ttf")
 
     button_selected = 2
+    has_not_designed_rocket = False
     while True:
         clock.tick()
         check_quit_conditions()
@@ -140,8 +149,11 @@ def main_menu_loop() -> None:
             play_button_active.display(SCREEN)
             designer_button_passive.display(SCREEN)
             if keys[pygame.K_RETURN]:
-                selected_loop = 1
-                break
+                if os.path.isfile("combined_components.png"):
+                    selected_loop = 1
+                    break
+                else:
+                    has_not_designed_rocket = True
         else:
             play_button_passive.display(SCREEN)
             designer_button_active.display(SCREEN)
@@ -149,13 +161,16 @@ def main_menu_loop() -> None:
                 selected_loop = 2
                 break
         
+        if has_not_designed_rocket:
+            sub_text.display("Design a rocket first!", [window_size[0] // 2, window_size[1] // 8 * 3], (255,0,0), SCREEN)
+
         heading.display("Asteroid Anarchy!", 
                         [window_size[0] // 2, window_size[1] // 5],
                         (0,0,255),
                         SCREEN
                         )
         sub_text.display("A SPECtrum Club game",
-                        [window_size[0] // 2, window_size[1] // 8 * 3],
+                        [window_size[0] // 2, window_size[1] // 8 * 2],
                         (255,255,255),
                         SCREEN
                         )
@@ -335,7 +350,7 @@ def rocket_designer_loop():
                     else:
                         weapon_selected = 1
         
-        print(level_selected, top_selected, middle_selected, engine_selected, weapon_selected)
+        # print(level_selected, top_selected, middle_selected, engine_selected, weapon_selected)
 
         # get the selected component
         top_component = COMPONENTS["top level"][top_selected]
