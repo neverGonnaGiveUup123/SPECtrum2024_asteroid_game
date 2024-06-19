@@ -11,6 +11,7 @@ class Rocket:
         self.velocity = 512 // FPSCAP
         self.pos = [self.window_size[0] // 2, self.window_size[1] // 5 * 4]
         self.screen = screen
+        self.points_multiplier = 1
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
 
     def handle_movement(self) -> None:
@@ -42,3 +43,9 @@ class Rocket:
 
     def set_pos(self, pos: list[int, int]):
         self.pos = pos
+
+    def import_rocket_designer_vals(self, velocity: int, points_multiplier: float, skin: pygame.Surface):
+        self.velocity = velocity
+        self.points_multiplier = points_multiplier
+        self.skin = skin
+        self.mask = pygame.mask.from_surface(skin.convert_alpha())

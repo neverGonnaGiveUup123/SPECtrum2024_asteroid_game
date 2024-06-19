@@ -2,6 +2,7 @@ import sys
 import os
 import pygame
 import json
+from PIL import Image
 from settings import *
 from rocket import Rocket
 from asteroid import Asteroid
@@ -340,6 +341,19 @@ def rocket_designer_loop():
         component_text.display("Backspace to exit", [window_size[0] // 4 * 3, 128], (255,255,255), SCREEN)
 
         if keys[pygame.K_BACKSPACE]:
+            velocity = top_component.velocity + middle_component.velocity + engine_component.velocity
+            points_multiplier = 1 + top_component.points_multiplier + middle_component.points_multiplier
+
+            pygame.image.save(top_component_skin, "top_component_skin.png")
+            pygame.image.save(middle_component_skin, "middle_component_skin.png")
+            pygame.image.save(engine_component_skin, "engine_component_skin")
+
+            tcs_img = Image.open("top_component_skin.png")
+            tcs_img.resize((player.size // 3, player.size // 3))
+            mcs_img = Image.open("midle_component_skin.png")
+            ecs_img = Image.open("engine_component_skin.png")
+
+            combined_img = Image.new("RGB", (window_size[0] // 10, window_size[0] // 10))
             selected_loop = 0
             break
 
