@@ -227,9 +227,11 @@ def rocket_designer_loop():
     top_selected = 0
     middle_selected = 0
     engine_selected = 0
+    weapon_selected = 0
     level_selected = 0
 
     component_size = (window_size[0] // COMPONENTRESIZEVAL, window_size[0] // COMPONENTRESIZEVAL)
+    component_text = Text(11, "PressStart2P-vaV7.ttf")
 
     while True:
         check_quit_conditions()
@@ -238,18 +240,18 @@ def rocket_designer_loop():
 
         # select level
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
+        if keys[pygame.K_s]:
             pygame.time.delay(200)
-            if level_selected < 2:
+            if level_selected < 3:
                 level_selected += 1
             else:
                 level_selected = 0
-        if keys[pygame.K_s]:
+        if keys[pygame.K_w]:
             pygame.time.delay(200)
             if level_selected > 0:
                 level_selected -= 1
             else:
-                level_selected = 2
+                level_selected = 3
 
         # select component
         match level_selected:
@@ -292,13 +294,27 @@ def rocket_designer_loop():
                         engine_selected -= 1
                     else:
                         engine_selected = 2
+            case 3:
+                if keys[pygame.K_d]:
+                    pygame.time.delay(200)
+                    if weapon_selected < 1:
+                        weapon_selected += 1
+                    else:
+                        weapon_selected = 0
+                if keys[pygame.K_a]:
+                    pygame.time.delay(200)
+                    if weapon_selected < 0:
+                        weapon_selected -= 1
+                    else:
+                        weapon_selected = 1
         
-        print(level_selected, top_selected, middle_selected, engine_selected)
+        print(level_selected, top_selected, middle_selected, engine_selected, weapon_selected)
 
         # get the selected component
         top_component = COMPONENTS["top level"][top_selected]
         middle_component = COMPONENTS["middle level"][middle_selected]
         engine_component = COMPONENTS["engine"][engine_selected]
+        weapon_component = COMPONENTS["weapons"][weapon_selected]
 
         # Get the necessary information for displaying
         top_component_skin = pygame.image.load(top_component.skin)
@@ -307,10 +323,18 @@ def rocket_designer_loop():
         middle_component_skin = pygame.transform.scale(middle_component_skin, component_size)
         engine_component_skin = pygame.image.load(engine_component.skin)
         engine_component_skin = pygame.transform.scale(engine_component_skin, component_size)
+        weapon_component_skin = pygame.image.load(weapon_component.skin)
+        weapon_component_skin = pygame.transform.scale(weapon_component_skin, component_size)
 
-        SCREEN.blit(top_component_skin, top_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 + 128)))
-        SCREEN.blit(middle_component_skin, middle_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 2 + 128)))
-        SCREEN.blit(engine_component_skin, engine_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 3 + 128)))
+        SCREEN.blit(top_component_skin, top_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 + 64)))
+        SCREEN.blit(middle_component_skin, middle_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 2 + 64)))
+        SCREEN.blit(engine_component_skin, engine_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 3 + 64)))
+        SCREEN.blit(weapon_component_skin, weapon_component_skin.get_rect(center=(window_size[0] // 2, window_size[1] // 5 * 4 + 64)))
+
+        component_text.display(top_component.description, [256, window_size[1] // 5 + 64], (255,255,255), SCREEN)
+        component_text.display(middle_component.description, [256, window_size[1] // 5 * 2 + 64], (255,255,255), SCREEN)
+        component_text.display(engine_component.description, [256, window_size[1] // 5 * 3 + 64], (255,255,255), SCREEN)
+        component_text.display(weapon_component.description, [256, window_size[1] // 5 * 4 + 64], (255,255,255), SCREEN)
 
         pygame.display.flip()
 
