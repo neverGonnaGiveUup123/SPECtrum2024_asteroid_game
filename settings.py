@@ -1,6 +1,6 @@
 from component import Component
 
-WINDOWSIZE = (0, 0)
+WINDOWSIZE = (800, 800)
 
 ASTEROIDSPAWNRATE = 50
 

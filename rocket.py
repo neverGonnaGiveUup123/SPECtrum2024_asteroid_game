@@ -5,7 +5,7 @@ from settings import *
 class Rocket:
     def __init__(self, screen: pygame.Surface) -> None:
         self.window_size = pygame.display.get_window_size()
-        self.size = (self.window_size[0] // 10, self.window_size[0] // 10)
+        self.size = (self.window_size[0] // 10 // 3, self.window_size[0] // 10)
         self.skin = pygame.Surface(self.size)
         self.skin.fill((255, 0, 0))
         self.velocity = 512 // FPSCAP

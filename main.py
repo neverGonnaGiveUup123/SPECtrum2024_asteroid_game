@@ -344,16 +344,23 @@ def rocket_designer_loop():
             velocity = top_component.velocity + middle_component.velocity + engine_component.velocity
             points_multiplier = 1 + top_component.points_multiplier + middle_component.points_multiplier
 
+            # converting it into something pillow can understand
             pygame.image.save(top_component_skin, "top_component_skin.png")
             pygame.image.save(middle_component_skin, "middle_component_skin.png")
-            pygame.image.save(engine_component_skin, "engine_component_skin")
+            pygame.image.save(engine_component_skin, "engine_component_skin.png")
 
             tcs_img = Image.open("top_component_skin.png")
-            tcs_img.resize((player.size // 3, player.size // 3))
-            mcs_img = Image.open("midle_component_skin.png")
+            tcs_img = tcs_img.resize((player.size[0], player.size[1] // 3))
+            mcs_img = Image.open("middle_component_skin.png")
+            mcs_img = mcs_img.resize((player.size[0], player.size[1] // 3))
             ecs_img = Image.open("engine_component_skin.png")
+            ecs_img = ecs_img.resize((player.size[0], player.size[1] // 3))
 
-            combined_img = Image.new("RGB", (window_size[0] // 10, window_size[0] // 10))
+            combined_img = Image.new("RGB", player.size)
+            combined_img.paste(tcs_img, (0,0))
+            combined_img.paste(mcs_img, (0, player.size[1] // 3))
+            combined_img.paste(ecs_img, (0, player.size[1] // 3 * 2))
+            combined_img.save("combined_components.png")
             selected_loop = 0
             break
 
