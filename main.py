@@ -72,7 +72,7 @@ def game_loop() -> None:
 
         SCREEN.fill((0, 0, 0))
         cooldown -= 1
-        print(variable_rate)
+        # print(variable_rate)
         if cooldown <= 0:
             Asteroid.add_asteroid(Asteroid(SCREEN))
             cooldown = variable_rate
@@ -403,7 +403,7 @@ def rocket_designer_loop():
             combined_img.paste(ecs_img, (0, player.size[1] // 3 * 2))
             combined_img.save("combined_components.png")
 
-            player.import_rocket_designer_vals(velocity, points_multiplier, pygame.image.load("combined_components.png"))
+            player.import_rocket_designer_vals(velocity, points_multiplier, pygame.image.load("combined_components.png"), weapon_selected)
             selected_loop = 0
             break
 

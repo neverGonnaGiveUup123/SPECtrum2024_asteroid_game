@@ -20,6 +20,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.pos = [randint(0, self.window_size[0]), -100]
         self.screen = screen
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
+        self.health = 12
         super().__init__()
 
     def update(self):
@@ -31,6 +32,10 @@ class Asteroid(pygame.sprite.Sprite):
     def update_all(cls):
         for i in cls.asteroids:
             if i.pos[1] > i.window_size[1] + 100:
+                cls.asteroids.remove(i)
+                del i
+            elif i.health <= 0:
+                cls.asteroids.remove(i)
                 del i
             else:
                 i.update()
