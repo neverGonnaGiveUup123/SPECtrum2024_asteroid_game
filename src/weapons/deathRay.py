@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from asteroid import Asteroid
+from src.asteroid import Asteroid
 
 class DeathRay(pygame.sprite.Sprite):
     death_ray = pygame.sprite.GroupSingle()

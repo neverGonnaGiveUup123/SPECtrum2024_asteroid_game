@@ -4,10 +4,11 @@ import pygame
 import json
 from PIL import Image
 from settings import *
-from rocket import Rocket
-from asteroid import Asteroid
-from comet import Comet
-from widgets import Button, Text
+from src.rocket import Rocket
+from src.asteroid import Asteroid
+from src.comet import Comet
+from src.widgets import Button, Text
+from src.weapons.machineGun import MachineGun
 
 pygame.init()
 
@@ -28,17 +29,17 @@ def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            os.remove("top_component_skin.png")
-            os.remove("middle_component_skin.png")
-            os.remove("engine_component_skin.png")
-            os.remove("combined_components.png")
+            os.remove("src/img/top_component_skin.png")
+            os.remove("src/img/middle_component_skin.png")
+            os.remove("src/imgengine_component_skin.png")
+            os.remove("src/img/combined_components.png")
             pygame.quit()
             sys.exit()
     if keys[pygame.K_ESCAPE]:
-        os.remove("top_component_skin.png")
-        os.remove("middle_component_skin.png")
-        os.remove("engine_component_skin.png")
-        os.remove("combined_components.png")
+        os.remove("src/img/top_component_skin.png")
+        os.remove("src/img/middle_component_skin.png")
+        os.remove("src/img/engine_component_skin.png")
+        os.remove("src/img/combined_components.png")
         pygame.quit()
         sys.exit()
 
@@ -128,8 +129,8 @@ def main_menu_loop() -> None:
         designer_button_text,
     )
 
-    heading = Text(36, "PressStart2P-vaV7.ttf")
-    sub_text = Text(12, "PressStart2P-vaV7.ttf")
+    heading = Text(36, "src/PressStart2P-vaV7.ttf")
+    sub_text = Text(12, "src/PressStart2P-vaV7.ttf")
 
     button_selected = 2
     has_not_designed_rocket = False
@@ -149,8 +150,10 @@ def main_menu_loop() -> None:
             play_button_active.display(SCREEN)
             designer_button_passive.display(SCREEN)
             if keys[pygame.K_RETURN]:
-                if os.path.isfile("combined_components.png"):
+                if os.path.isfile("src/img/combined_components.png"):
                     selected_loop = 1
+                    Asteroid.asteroids.clear()
+                    MachineGun.bullets.clear()
                     break
                 else:
                     has_not_designed_rocket = True
@@ -189,13 +192,13 @@ def main_menu_loop() -> None:
 
 
 def get_high_scores() -> dict:
-    with open("highScores.json", "r") as file:
+    with open("src/highScores.json", "r") as file:
         data = json.load(file)
         return data
 
 
 def set_high_scores(obj):
-    with open("highScores.json", "w") as file:
+    with open("src/highScores.json", "w") as file:
         json.dump(obj, file)
 
 
@@ -273,7 +276,7 @@ def rocket_designer_loop():
     level_selected = 0
 
     component_size = (window_size[0] // COMPONENTRESIZEVAL, window_size[0] // COMPONENTRESIZEVAL)
-    component_text = Text(11, "PressStart2P-vaV7.ttf")
+    component_text = Text(11, "src/PressStart2P-vaV7.ttf")
 
     while True:
         check_quit_conditions()
@@ -386,24 +389,24 @@ def rocket_designer_loop():
             points_multiplier = 1 + top_component.points_multiplier + middle_component.points_multiplier
 
             # converting it into something pillow can understand
-            pygame.image.save(top_component_skin, "top_component_skin.png")
-            pygame.image.save(middle_component_skin, "middle_component_skin.png")
-            pygame.image.save(engine_component_skin, "engine_component_skin.png")
+            pygame.image.save(top_component_skin, "src/img/top_component_skin.png")
+            pygame.image.save(middle_component_skin, "src/img/middle_component_skin.png")
+            pygame.image.save(engine_component_skin, "src/img/engine_component_skin.png")
 
-            tcs_img = Image.open("top_component_skin.png")
+            tcs_img = Image.open("src/img/top_component_skin.png")
             tcs_img = tcs_img.resize((player.size[0], player.size[1] // 3))
-            mcs_img = Image.open("middle_component_skin.png")
+            mcs_img = Image.open("src/img/middle_component_skin.png")
             mcs_img = mcs_img.resize((player.size[0], player.size[1] // 3))
-            ecs_img = Image.open("engine_component_skin.png")
+            ecs_img = Image.open("src/img/engine_component_skin.png")
             ecs_img = ecs_img.resize((player.size[0], player.size[1] // 3))
 
             combined_img = Image.new("RGB", player.size)
             combined_img.paste(tcs_img, (0,0))
             combined_img.paste(mcs_img, (0, player.size[1] // 3))
             combined_img.paste(ecs_img, (0, player.size[1] // 3 * 2))
-            combined_img.save("combined_components.png")
+            combined_img.save("src/img/combined_components.png")
 
-            player.import_rocket_designer_vals(velocity, points_multiplier, pygame.image.load("combined_components.png"), weapon_selected)
+            player.import_rocket_designer_vals(velocity, points_multiplier, pygame.image.load("src/img/combined_components.png"), weapon_selected)
             selected_loop = 0
             break
 

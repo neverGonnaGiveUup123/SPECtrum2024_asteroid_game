@@ -1,6 +1,7 @@
 import pygame
 from random import randint
 from settings import *
+from PIL import Image
 
 
 class Asteroid(pygame.sprite.Sprite):
@@ -9,19 +10,24 @@ class Asteroid(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface) -> None:
         self.ran_dimension = randint(5, 10)
         self.window_size = pygame.display.get_window_size()
-        self.skin = pygame.Surface(
-            (
-                self.window_size[0] // self.ran_dimension,
-                self.window_size[0] // self.ran_dimension,
-            )
-        )
-        self.skin.fill((0, 255, 0))
+        self.size = (self.window_size[0] // self.ran_dimension, self.window_size[0] // self.ran_dimension)
+        self.skin = Image.open("src/img/asteroid.png")
+        self.skin = self.skin.resize(self.size)
+        self.skin.save("src/img/asteroid.png")
+        self.skin = pygame.image.load("src/img/asteroid.png")
         self.velocity = randint(514, 578) // FPSCAP
         self.pos = [randint(0, self.window_size[0]), -100]
         self.screen = screen
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
         self.health = 12
+        self.explosion = Image.open("src/img/explosion.png")
+        self.explosion = self.explosion.resize(self.size)
+        self.explosion.save("src/img/large_explosion.png")
+        self.explosion = pygame.image.load("src/img/large_explosion.png")
         super().__init__()
+    
+    def explode(self):
+        self.screen.blit(self.explosion, self.skin.get_rect(center=self.pos))
 
     def update(self):
         self.pos[1] += self.velocity
@@ -35,6 +41,7 @@ class Asteroid(pygame.sprite.Sprite):
                 cls.asteroids.remove(i)
                 del i
             elif i.health <= 0:
+                i.explode()
                 cls.asteroids.remove(i)
                 del i
             else:

@@ -1,7 +1,7 @@
 import pygame
 from settings import *
-from machineGun import MachineGun
-from deathRay import DeathRay
+from src.weapons.machineGun import MachineGun
+from src.weapons.deathRay import DeathRay
 
 class Rocket:
     def __init__(self, screen: pygame.Surface) -> None:
