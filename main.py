@@ -24,6 +24,18 @@ points = 0
 
 selected_loop = 0
 
+# set image sizes
+explosion = Image.open("src/img/explosion.png")
+explosion = explosion.resize((window_size[0] // 7, window_size[0] // 7))
+explosion.save("src/img/large_explosion.png")
+
+asteroid_skin = Image.open("src/img/asteroid.png")
+small_asteroid_skin = asteroid_skin.resize((window_size[0] // 10, window_size[0] // 10))
+medium_asteroid_skin = asteroid_skin.resize((window_size[0] // 8, window_size[0] // 8))
+large_asteroid_skin = asteroid_skin.resize((window_size[0] // 5, window_size[0] // 5))
+small_asteroid_skin.save("src/img/small_asteroid_skin.png")
+medium_asteroid_skin.save("src/img/medium_asteroid_skin.png")
+large_asteroid_skin.save("src/img/large_asteroid_skin.png")
 
 def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
@@ -152,8 +164,8 @@ def main_menu_loop() -> None:
             if keys[pygame.K_RETURN]:
                 if os.path.isfile("src/img/combined_components.png"):
                     selected_loop = 1
-                    Asteroid.asteroids.clear()
-                    MachineGun.bullets.clear()
+                    Asteroid.asteroids.empty()
+                    MachineGun.bullets.empty()
                     break
                 else:
                     has_not_designed_rocket = True

@@ -8,21 +8,20 @@ class Asteroid(pygame.sprite.Sprite):
     asteroids = pygame.sprite.Group()
 
     def __init__(self, screen: pygame.Surface) -> None:
-        self.ran_dimension = randint(5, 10)
+        self.random = randint(0, 2)
         self.window_size = pygame.display.get_window_size()
-        self.size = (self.window_size[0] // self.ran_dimension, self.window_size[0] // self.ran_dimension)
-        self.skin = Image.open("src/img/asteroid.png")
-        self.skin = self.skin.resize(self.size)
-        self.skin.save("src/img/asteroid.png")
-        self.skin = pygame.image.load("src/img/asteroid.png")
+        match self.random:
+            case 0:
+                self.skin = pygame.image.load("src/img/small_asteroid_skin.png")
+            case 1:
+                self.skin = pygame.image.load("src/img/medium_asteroid_skin.png")
+            case 2:
+                self.skin = pygame.image.load("src/img/large_asteroid_skin.png")
         self.velocity = randint(514, 578) // FPSCAP
         self.pos = [randint(0, self.window_size[0]), -100]
         self.screen = screen
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
         self.health = 12
-        self.explosion = Image.open("src/img/explosion.png")
-        self.explosion = self.explosion.resize(self.size)
-        self.explosion.save("src/img/large_explosion.png")
         self.explosion = pygame.image.load("src/img/large_explosion.png")
         super().__init__()
     

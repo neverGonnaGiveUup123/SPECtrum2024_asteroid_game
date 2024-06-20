@@ -15,9 +15,6 @@ class MachineGun(pygame.sprite.Sprite):
         self.pos = pos.copy()
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
         self.screen = screen
-        self.explosion = Image.open("src/img/explosion.png")
-        self.explosion = self.explosion.resize(self.size)
-        self.explosion.save("src/img/small_explosion.png")
         self.explosion = pygame.image.load("src/img/small_explosion.png")
         super().__init__()
         self.add(MachineGun.bullets)
