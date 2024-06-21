@@ -117,8 +117,8 @@ def game_loop() -> None:
             tmp -= 1
             comet_catch.display("+5000", pos, (0,255,0), SCREEN)
 
-        # if check_lose_conditions():
-        #     break
+        if check_lose_conditions():
+            break
 
         comet_catch.display(f"Score: {points}", [100, 50], (255,255,255), SCREEN)
         comet_catch.display(f"Cooldown: {player.tmp}", [100, 100], (255,255,255), SCREEN)

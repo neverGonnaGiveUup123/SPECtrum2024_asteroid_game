@@ -1,7 +1,7 @@
 from src.component import Component
 
 # set to (0,0) to make it fullscreen
-WINDOWSIZE = (1200, 800)
+WINDOWSIZE = (0, 0)
 
 # starting spawn rate for the asteroids
 ASTEROIDSPAWNRATE = 50
