@@ -29,7 +29,7 @@ class Rocket:
 
         self.rect = self.skin.get_rect(center=self.pos)
 
-    def check_collision(self, sprite_group, kill: bool) -> False:
+    def check_collision(self, sprite_group, kill: bool) -> bool:
         if pygame.sprite.spritecollide(
             self, sprite_group, kill, pygame.sprite.collide_mask
         ):
@@ -38,21 +38,13 @@ class Rocket:
             return False
 
     def update(self) -> None:
-        keys = pygame.key.get_pressed()
         self.handle_movement()
 
         if self.selected_weapon == 0:
             self.fire_machine_gun()
         
         if self.selected_weapon == 1:
-            self.tmp -= 1
-            if self.tmp <= 0 and keys[pygame.K_SPACE]:
-                DeathRay.death_ray.add(DeathRay(self.screen, self.pos))
-                self.tmp = self.weapon_cooldown
-            
-            laser = DeathRay.death_ray.sprite
-            if laser:
-                laser.update() 
+            self.fire_death_ray()
         
 
         self.screen.blit(self.skin, self.rect)
@@ -68,6 +60,18 @@ class Rocket:
         
         for i in MachineGun.bullets:
             i.update()
+    
+    def fire_death_ray(self):
+        keys = pygame.key.get_pressed()
+        if self.tmp > 0:
+            self.tmp -= 1
+        if self.tmp <= 0 and keys[pygame.K_SPACE]:
+            DeathRay.death_ray.add(DeathRay(self.screen, self.pos))
+            self.tmp = self.weapon_cooldown
+        
+        laser = DeathRay.death_ray.sprite
+        if laser:
+            laser.update() 
 
     def import_rocket_designer_vals(self, velocity: int, points_multiplier: float, skin: pygame.Surface, weapon: int):
         self.velocity = velocity
@@ -77,9 +81,9 @@ class Rocket:
 
         if weapon == 0:
             self.weapon_cooldown = 1200 // FPSCAP
-            self.tmp = 0
+            self.tmp = self.weapon_cooldown
             self.selected_weapon = 0
         else:
             self.weapon_cooldown = 28800 // FPSCAP
-            self.tmp = 0
+            self.tmp = self.weapon_cooldown
             self.selected_weapon = 1

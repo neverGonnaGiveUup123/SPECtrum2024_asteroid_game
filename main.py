@@ -37,6 +37,10 @@ small_asteroid_skin.save("src/img/small_asteroid_skin.png")
 medium_asteroid_skin.save("src/img/medium_asteroid_skin.png")
 large_asteroid_skin.save("src/img/large_asteroid_skin.png")
 
+bullet = Image.open("src/img/bullet.png")
+bullet = bullet.resize((window_size[0] // 50, window_size[0] // 50))
+bullet.save("src/img/bullet.png")
+
 def check_quit_conditions() -> None:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
@@ -67,7 +71,7 @@ def check_lose_conditions() -> None:
 
 def track_points() -> int:
     if player.check_collision(Comet.comet, True):
-        return 100 + clock.tick()
+        return 5000 + clock.tick()
     else:
         return clock.tick()
 
@@ -79,8 +83,11 @@ def game_loop() -> None:
     Comet.create_comet(SCREEN)
     player.set_pos([window_size[0] // 2, window_size[1] // 5 * 4])
     Asteroid.asteroids.empty()
+
+    comet_catch = Text(12, "src/PressStart2P-vaV7.ttf")
+    tmp = 0
     while True:
-        clock.tick(FPSCAP)
+        points += clock.tick(FPSCAP)
         check_quit_conditions()
 
         SCREEN.fill((0, 0, 0))
@@ -91,7 +98,7 @@ def game_loop() -> None:
             cooldown = variable_rate
 
             if variable_rate > ASTEROIDSPAWNCAP:
-                variable_rate -= clock.get_rawtime()
+                variable_rate -= 0.5
 
         Asteroid.update_all()
         if Comet.comet_exists():
@@ -100,10 +107,21 @@ def game_loop() -> None:
             Comet.create_comet(SCREEN)
 
         player.update()
-        points += track_points()
 
-        if check_lose_conditions():
-            break
+        if player.check_collision(Comet.comet, True):
+            points += 5000
+            tmp = 7200 // FPSCAP
+            pos = player.pos.copy()
+        
+        if tmp > 0:
+            tmp -= 1
+            comet_catch.display("+5000", pos, (0,255,0), SCREEN)
+
+        # if check_lose_conditions():
+        #     break
+
+        comet_catch.display(f"Score: {points}", [100, 50], (255,255,255), SCREEN)
+        comet_catch.display(f"Cooldown: {player.tmp}", [100, 100], (255,255,255), SCREEN)
 
         pygame.display.flip()
 
@@ -112,7 +130,7 @@ def main_menu_loop() -> None:
     global selected_loop
 
     play_button_colour_active = pygame.Color(255, 0, 0)
-    play_button_colour_passive = pygame.Color(207, 0, 0)
+    play_button_colour_passive = pygame.Color(55, 0, 0)
     play_button_size = (window_size[0] // 2, window_size[1] // 8)
     play_button_pos = (window_size[0] // 2, window_size[1] // 2)
     play_button_text = "Start game"
@@ -124,7 +142,7 @@ def main_menu_loop() -> None:
     )
 
     designer_button_colour_active = pygame.Color(0, 255, 0)
-    designer_button_colour_passive = pygame.Color(0, 207, 0)
+    designer_button_colour_passive = pygame.Color(0, 55, 0)
     designer_button_size = play_button_size
     designer_button_pos = (play_button_pos[0], window_size[1] // 4 * 3)
     designer_button_text = "Enter rocket designer"
@@ -321,7 +339,7 @@ def rocket_designer_loop():
                         top_selected = 0
                 if keys[pygame.K_a]:
                     pygame.time.delay(200)
-                    if top_selected < 0:
+                    if top_selected > 0:
                         top_selected -= 1
                     else:
                         top_selected = 2
@@ -334,7 +352,7 @@ def rocket_designer_loop():
                         middle_selected = 0
                 if keys[pygame.K_a]:
                     pygame.time.delay(200)
-                    if middle_selected < 0:
+                    if middle_selected > 0:
                         middle_selected -= 1
                     else:
                         middle_selected = 2
@@ -347,7 +365,7 @@ def rocket_designer_loop():
                         engine_selected = 0
                 if keys[pygame.K_a]:
                     pygame.time.delay(200)
-                    if engine_selected < 0:
+                    if engine_selected > 0:
                         engine_selected -= 1
                     else:
                         engine_selected = 2
@@ -395,6 +413,8 @@ def rocket_designer_loop():
 
         component_text.display("ROCKET DESIGNER", [window_size[0] // 4 * 3, 64], (255,255,255), SCREEN)
         component_text.display("Backspace to exit", [window_size[0] // 4 * 3, 128], (255,255,255), SCREEN)
+        component_text.display("Machine gun fires automatically", [window_size[0] // 4 * 3, 192], (255,255,255), SCREEN)
+        component_text.display("Spacebar to fire death ray", [window_size[0] // 4 * 3, 256], (255,255,255),SCREEN)
 
         if keys[pygame.K_BACKSPACE]:
             velocity = top_component.velocity + middle_component.velocity + engine_component.velocity

@@ -1,13 +1,13 @@
 from src.component import Component
 
 # set to (0,0) to make it fullscreen
-WINDOWSIZE = (0, 0)
+WINDOWSIZE = (1200, 800)
 
 # starting spawn rate for the asteroids
 ASTEROIDSPAWNRATE = 50
 
 # minimum allowed cooldown for asteroid spawning
-ASTEROIDSPAWNCAP = 12
+ASTEROIDSPAWNCAP = 10
 
 # max fps
 FPSCAP = 60

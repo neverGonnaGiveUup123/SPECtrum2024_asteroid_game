@@ -8,9 +8,7 @@ class MachineGun(pygame.sprite.Sprite):
     def __init__(self, pos: list[int, int], screen: pygame.Surface) -> None:
         self.velocity = 600 // FPSCAP
         self.window_size = pygame.display.get_window_size()
-        self.size = (self.window_size[0] // 50, self.window_size[0] // 50)
-        self.skin = pygame.Surface(self.size)
-        self.skin.fill((255,0,0))
+        self.skin = pygame.image.load("src/img/bullet.png")
         self.damage = 1
         self.pos = pos.copy()
         self.mask = pygame.mask.from_surface(self.skin.convert_alpha())
