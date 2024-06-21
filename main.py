@@ -14,6 +14,8 @@ pygame.init()
 
 SCREEN = pygame.display.set_mode(WINDOWSIZE)
 
+pygame.mouse.set_visible(False)
+
 window_size = pygame.display.get_window_size()
 
 clock = pygame.time.Clock()
